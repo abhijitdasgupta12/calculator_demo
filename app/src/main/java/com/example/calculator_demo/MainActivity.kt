@@ -97,12 +97,18 @@ class MainActivity : AppCompatActivity()
             displayOperands.setText("  ")
         }
 
+        //To clear last text in newNumEditText
+        buttonDelete.setOnClickListener {
+            var text : String = newNumEditText.text.toString()
+            newNumEditText.setText(text.substring(0, text.length - 1))
+        }
+
         //Customizing the onClickListener for the operations
         /*
             Logic: Operands from the buttons & the value in the newNumEditText are entered as parameters into the user defined function perfomOperation() where the arithmatic operations will be performed.
                    "pendingOperation" represents the sign of operands i.e. + for addition, - for subtraction, * for multiplication, / for division, % for percentage & = for equals.
 
-                    The operands are selected by the "op" at line #104 where the button will be responsible to provide the operands whenever the user clicks on the operands button(s).
+                    The operands are selected by the "op" at line #113 where the button will be responsible to provide the operands whenever the user clicks on the operands button(s).
         */
         val operationListener = View.OnClickListener {v->
             val op = (v as Button).text.toString() //It's picking up the text written on the button

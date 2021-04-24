@@ -7,6 +7,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
+import java.lang.NumberFormatException
 
 class MainActivity : AppCompatActivity()
 {
@@ -112,11 +114,15 @@ class MainActivity : AppCompatActivity()
         */
         val operationListener = View.OnClickListener {v->
             val op = (v as Button).text.toString() //It's picking up the text written on the button
-            val value = newNumEditText.text.toString()
 
-            if (value.isNotEmpty())
+            try
             {
+                val value = newNumEditText.text.toString().toDouble()
                 performOperation(value, op) //User defined function
+            }
+            catch (e: NumberFormatException) //To prevent app crash due to illegal entries
+            {
+                newNumEditText.setText("")
             }
 
             pendingOperation = op
@@ -133,15 +139,15 @@ class MainActivity : AppCompatActivity()
     }
 
     //Implementing the user defined function
-    private fun performOperation(value : String, operation : String)
+    private fun performOperation(value : Double, operation : String)
     {
         if(operand1 == null)
         {
-            operand1 = value.toDouble()
+            operand1 = value
         }
         else
         {
-            operand2 = value.toDouble()
+            operand2 = value
 
             /* For the equal button */
             if(pendingOperation == "=") //If equals button is pressed. In simple words if the picked up text from button is "=".

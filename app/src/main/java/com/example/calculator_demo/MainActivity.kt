@@ -3,12 +3,19 @@ package com.example.calculator_demo
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import java.lang.NumberFormatException
+
+//Custom key values to save the values before destruction of an activity and restore them when activity is re-created.
+private const val STATE_PENDING_OPERATION = "PendingOperation"
+private const val STATE_OPERAND1 = "Operand1"
+private const val STATE_OPERAND2 = "Operand2"
+private const val STATE_OPERAND1_STORED = "Operand1_Stored" //To check if there is any non null value inside the operand1
 
 class MainActivity : AppCompatActivity()
 {
@@ -28,7 +35,7 @@ class MainActivity : AppCompatActivity()
     //Variables to hold the operands and the type of calculation
     private var operand1 : Double ?= null //Num1 for calculation
     private var operand2 : Double = 0.0 //Num2 for calculation
-    private var pendingOperation = "=" //
+    private var pendingOperation = "="
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -178,5 +185,41 @@ class MainActivity : AppCompatActivity()
         resultEditText.setText(operand1.toString())
         newNumEditText.setText("")
         displayOperands.text = operation
+    }
+
+    //To save the values stored inside the variables "operand1", "operand2" & "pendingOperation" before activity is destroyed and re-created
+    override fun onSaveInstanceState(outState: Bundle)
+    {
+        super.onSaveInstanceState(outState)
+        if (operand1 != null) //operand1 can't be null. The app will crash if we try to save null value from operand1 before activity destroyed (in this case, activity destruction due to rotating the device).
+        {
+            outState.putDouble(STATE_OPERAND1, operand1!!) //operan1 was declared as non-null
+            outState.putBoolean(STATE_OPERAND1_STORED, true) //true = There is a value inside operand1 & it is not null
+        }
+        outState.putDouble(STATE_OPERAND2, operand2)
+        outState.putString(STATE_PENDING_OPERATION, pendingOperation)
+        println(outState)
+    }
+
+    //To restore the values that were saved by onSaveInstanceState() before activity was destroyed
+    override fun onRestoreInstanceState(savedInstanceState: Bundle)
+    {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        //Operand1 will get the value associated with STATE_OPERAND1 if operand1 isn't null. Otherwise it will get null value assigned. This function will work only when activity is destroyed (for example: device was rotated).
+        operand1 = if (savedInstanceState.getBoolean(STATE_OPERAND1_STORED))
+        {
+            savedInstanceState.getDouble(STATE_OPERAND1)
+        }
+        else
+        {
+            null
+        }
+
+        operand2 = savedInstanceState.getDouble(STATE_OPERAND2)
+        pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION).toString()
+
+        //Displaying the value of pendingOperation in the textview
+        displayOperands.setText(pendingOperation)
     }
 }

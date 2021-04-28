@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity()
             Logic: Operands from the buttons & the value in the newNumEditText are entered as parameters into the user defined function perfomOperation() where the arithmatic operations will be performed.
                    "pendingOperation" represents the sign of operands i.e. + for addition, - for subtraction, * for multiplication, / for division, % for percentage & = for equals.
 
-                    The operands are selected by the "op" at line #113 where the button will be responsible to provide the operands whenever the user clicks on the operands button(s).
+                    The operands are selected by the "op" at line #122 where the button will be responsible to provide the operands whenever the user clicks on the operands button(s).
         */
         val operationListener = View.OnClickListener {v->
             val op = (v as Button).text.toString() //It's picking up the text written on the button
@@ -198,7 +198,6 @@ class MainActivity : AppCompatActivity()
         }
         outState.putDouble(STATE_OPERAND2, operand2)
         outState.putString(STATE_PENDING_OPERATION, pendingOperation)
-        println(outState)
     }
 
     //To restore the values that were saved by onSaveInstanceState() before activity was destroyed
@@ -220,6 +219,6 @@ class MainActivity : AppCompatActivity()
         pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION).toString()
 
         //Displaying the value of pendingOperation in the textview
-        displayOperands.setText(pendingOperation)
+        displayOperands.text = pendingOperation
     }
 }

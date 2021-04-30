@@ -230,12 +230,12 @@
         app:layout_constraintStart_toEndOf="@+id/buttonAllClear" />
 
     <Button
-        android:id="@+id/buttonExit"
+        android:id="@+id/buttonNeg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="17dp"
-        android:text="OFF"
+        android:text="+/-"
         android:textSize="24sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/buttonModulo"
         app:layout_constraintEnd_toEndOf="parent"

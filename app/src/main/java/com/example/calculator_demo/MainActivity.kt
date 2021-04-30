@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import java.lang.Exception
 import java.lang.NumberFormatException
 
 //Custom key values to save the values before destruction of an activity and restore them when activity is re-created.
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity()
         val buttonDelete : Button = findViewById(R.id.buttonDelete)
         val buttonAllClear : Button = findViewById(R.id.buttonAllClear)
         val buttonEquals : Button = findViewById(R.id.buttonEquals)
-        val buttonExit : Button = findViewById(R.id.buttonExit)
+        val buttonNeg : Button = findViewById(R.id.buttonNeg)
 
         //Configuring the onClickListener: This single onclicklistener will do operations for multiple buttons.
         val listener = View.OnClickListener { v->
@@ -92,11 +93,6 @@ class MainActivity : AppCompatActivity()
         buttonDot.setOnClickListener(listener)
 
 
-        //The traditional onclicklistener to exit the app
-        buttonExit.setOnClickListener {
-            finishAffinity()
-        }
-
         //To clear the editTexts
         buttonAllClear.setOnClickListener {
             newNumEditText.text.clear()
@@ -117,7 +113,7 @@ class MainActivity : AppCompatActivity()
             Logic: Operands from the buttons & the value in the newNumEditText are entered as parameters into the user defined function perfomOperation() where the arithmatic operations will be performed.
                    "pendingOperation" represents the sign of operands i.e. + for addition, - for subtraction, * for multiplication, / for division, % for percentage & = for equals.
 
-                    The operands are selected by the "op" at line #122 where the button will be responsible to provide the operands whenever the user clicks on the operands button(s).
+                    The operands are selected by the "op" at line #117 where the button will be responsible to provide the operands whenever the user clicks on the operands button(s).
         */
         val operationListener = View.OnClickListener {v->
             val op = (v as Button).text.toString() //It's picking up the text written on the button
@@ -143,6 +139,31 @@ class MainActivity : AppCompatActivity()
         buttonMinus.setOnClickListener(operationListener)
         buttonPlus.setOnClickListener(operationListener)
         buttonModulo.setOnClickListener(operationListener)
+
+        //Working on the Negative button that will enable the user to enter a negative value
+        buttonNeg.setOnClickListener {
+            val negData = newNumEditText.text.toString()
+
+            //Put "-" in editText if editText is empty. When the user enters new number, the new number will be negative. If editText isn't empty, multiply the existing number in newNumEditText with -1 to make it negative.
+            if(negData.isEmpty())
+            {
+                newNumEditText.setText("-")
+            }
+            else
+            {
+                try
+                {
+                    var doubleValue = negData.toDouble()
+                    doubleValue *= -1 //The positive value is now multiplied by -1 to make it negative or make a negative number positive
+                    newNumEditText.setText(doubleValue.toString())
+                }
+                catch (e : Exception)
+                {
+                    //if any error occurs. Specially if user presses equal button while newNumEditText has value of "-" or ".". Clear the editText
+                    newNumEditText.setText("")
+                }
+            }
+        }
     }
 
     //Implementing the user defined function
